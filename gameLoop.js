@@ -35,24 +35,32 @@ export const gameLoop = state => {
     return;
   }
 
-  const playerOne = state.player;
+  const players = state.players;
 
-  updatePlayerPosition(playerOne);
+  players.forEach(player => updatePlayerPosition(player));
 
-  if (isOffGrid(playerOne)) {
-    return 2;
-  }
+  players.forEach((player, index) => {
+    if (isOffGrid(player)) {
+      return index + 1;
+    }
+  })
 
-  if (hasEatenFood(playerOne, state.food)) {
-    playerOne.snake.push({ ...playerOne.position });
-    updatePlayerPosition(playerOne);
-    randomFood(state);
-  }
+  players.forEach(player => {
+    if (hasEatenFood(player, state.food)) {
+      player.snake.push({ ...player.position });
+      updatePlayerPosition(player);
+      randomFood(state);
+    }
+  });
 
-  if (hasVelocity(playerOne) && hasEatenSelf(playerOne)) {
-    return 2;
-  }
+  players.forEach((player, index) => {
+    if (hasVelocity(player) && hasEatenSelf(player)) {
+      return index + 1;
+    }
 
-  playerOne.snake.push({ ...playerOne.position });
-  playerOne.snake.shift();
+    if (hasVelocity(player)) {
+      player.snake.push({ ...player.position });
+      player.snake.shift();
+    }
+  })
 };

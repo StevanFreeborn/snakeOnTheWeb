@@ -4,7 +4,9 @@ export default class SocketEvents {
     static gameState = 'gameState';
     static gameOver = 'gameOver';
     static keyDown = 'keyDown';
-    static newOnePlayerGame = 'newOnePlayerGame';
-    static newTwoPlayerGame = 'newTwoPlayerGame';
+    static newGame = 'newGame';
     static joinGame = 'joinGame';
+    static gameCode = 'gameCode';
+    static gameNotFound = 'gameNotFound';
+    static gameFull = 'gameFull';
 }

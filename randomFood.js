@@ -10,9 +10,16 @@ export const randomFood = state => {
     y: generateRandomGridPosition(),
   };
 
-  const foodIsOnSnake = state.player.snake.some(
-    segment => segment.x === food.x && segment.y === food.y
-  );
+  let foodIsOnSnake = false;
+  
+  for (const player of state.players) {
+    for (const segment of player.snake) {
+      if (segment.x === food.x && segment.y === food.y) {
+        foodIsOnASnake = true;
+        break;
+      }
+    }
+  }
 
   if (foodIsOnSnake) {
     return randomFood(state);

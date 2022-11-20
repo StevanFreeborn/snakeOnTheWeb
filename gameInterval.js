@@ -1,16 +1,19 @@
-import { FRAME_RATE } from "./constants.js";
-import { gameLoop } from "./gameLoop.js";
-import SocketEvents from "./public/scripts/socketEvents.js";
+import { FRAME_RATE } from './constants.js';
+import { gameLoop } from './gameLoop.js';
+import SocketEvents from './public/scripts/socketEvents.js';
 
-export const createGameInterval = (socket, state) => {
-    const intervalId = setInterval(() => {
-        const winner = gameLoop(state);
-        if (!winner) {
-            socket.emit(SocketEvents.gameState, state);
-            return;
-        }
+export const createGameInterval = (io, socket, globalState, gameId) => {
+  const intervalId = setInterval(() => {
+    const gameState = globalState[gameId];
+    const winner = gameLoop(gameState);
 
-        socket.emit(SocketEvents.gameOver);
-        clearInterval(intervalId);
-    }, 1000 / FRAME_RATE);
-}
+    if (!winner) {
+      io.sockets.in(gameId).emit(SocketEvents.gameState, gameState);
+      return;
+    }
+    
+    io.sockets.in(gameId).emit(SocketEvents.gameOver, { winner });
+    globalState[gameId] = null;
+    clearInterval(intervalId);
+  }, 1000 / FRAME_RATE);
+};

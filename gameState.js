@@ -1,8 +1,10 @@
 import { GRID_SIZE } from './constants.js';
+import GameModes from './public/scripts/gameModes.js';
+import { randomFood } from './randomFood.js';
 
-export const createGameState = () => {
-  return {
-    player: {
+const createGameState = mode => {
+  const gameState = {
+    players: [{
       position: {
         x: 3,
         y: 10,
@@ -25,11 +27,47 @@ export const createGameState = () => {
           y: 10,
         },
       ],
-    },
-    food: {
-      x: 7,
-      y: 7,
-    },
+    }],
+    food: {},
     gridSize: GRID_SIZE,
   };
+
+  if (mode == GameModes.TwoPlayer) {
+    const secondPlayer = {
+      position: {
+        x: 18,
+        y: 10,
+      },
+      velocity: {
+        x: 0,
+        y: 0,
+      },
+      snake: [
+        {
+          x: 20,
+          y: 10,
+        },
+        {
+          x: 19,
+          y: 10,
+        },
+        {
+          x: 18,
+          y: 10,
+        },
+      ],
+    };
+
+    gameState.players.push(secondPlayer);
+  }
+
+  return gameState;
 };
+
+export const initializeGameState = (mode) => {
+  const state = createGameState(mode);
+  randomFood(state);
+  return state;
+}
+
+

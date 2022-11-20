@@ -35,7 +35,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            <a id="new-single-player-game" class="btn btn-lg btn-success" href="/game?mode=one">New 1 Player Game</a>
+                            <a id="new-single-player-game" class="btn btn-lg btn-success" href="/game?mode=two">New 2 Player Game</a>
                         </div>
                     </div>
                     <hr class="solid w-100"/>
@@ -50,7 +50,7 @@
                                 <input name="mode" type="hidden" value="two">
                                 <div class="col-auto">
                                   <label for="gameId" class="visually-hidden">Password</label>
-                                  <input name="gameId" style="outline: none;" type="text" class="form-control-lg" id="gameId" placeholder="Game Id">
+                                  <input name="gameId" style="outline: none;" type="text" required class="form-control-lg" id="gameId" placeholder="Game Id">
                                 </div>
                                 <div class="col-auto">
                                   <button type="submit" class="btn btn-lg btn-success mb-3">Join Game</button>
@@ -71,7 +71,6 @@
     >
     </script>
     <script src="../public/scripts/index.js" type="module"></script>
-    
     
 </body>
 
