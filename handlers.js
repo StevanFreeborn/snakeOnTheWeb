@@ -27,38 +27,47 @@ export const handleKeydown = (socket, key, globalState, games) => {
     return head.x < tail.x;
   }
 
-  if (newVelocity) {
-    // if snake is moving don't allow it to move in the opposite y direction.
-    if (currentVelocity.x != 0 && currentVelocity.x * -1 == newVelocity.x) {
-      return;
-    } 
-
-    // if snake is moving don't allow it to move in the opposite x direction.
-    if (currentVelocity.y != 0 && currentVelocity.y * -1 == newVelocity.y) {
-      return;
-    }
-
-    // if snake is not moving and is facing left and player tries to move snake to the right don't allow it.
-    if (
-      currentVelocity.x == 0 &&
-      isFacingLeft(playerSnakeHead, playerSnakeTail) &&
-      newVelocity.x == snakeVelocities.right.x &&
-      newVelocity.y == snakeVelocities.right.y
-    ) {
-      return;
-    }
-
-    if (
-      currentVelocity.x == 0 &&
-      isFacingRight(playerSnakeHead, playerSnakeTail) &&
-      newVelocity.x == snakeVelocities.left.x &&
-      newVelocity.y == snakeVelocities.left.y
-    ) {
-      return;
-    }
-
-    globalState[game].players[socket.number - 1].velocity = newVelocity;
+  if (!newVelocity) {
+    return;
   }
+
+  // if snake is moving don't allow it to move in the opposite y direction.
+  // This is to prevent a player losing the game because they moved backwards on to themselves.
+  if (currentVelocity.x != 0 && currentVelocity.x * -1 == newVelocity.x) {
+    return;
+  }
+
+  // if snake is moving don't allow it to move in the opposite x direction.
+  // This is to prevent a player losing the game because they moved backwards on to themselves.
+  if (currentVelocity.y != 0 && currentVelocity.y * -1 == newVelocity.y) {
+    return;
+  }
+
+  // if snake is not moving and is facing left and player tries to move snake to the right don't allow it.
+  // this is to prevent the layer losing the game immediately by moving it's head back on to it's body
+  // at the start ot he game.
+  if (
+    currentVelocity.x == 0 &&
+    isFacingLeft(playerSnakeHead, playerSnakeTail) &&
+    newVelocity.x == snakeVelocities.right.x &&
+    newVelocity.y == snakeVelocities.right.y
+  ) {
+    return;
+  }
+
+  // if snake is not moving and is facing right and player tries to move snake to the left don't allow it.
+  // this is to prevent the player losing the game immediately by moving it's head back on to it's body
+  // at the start of the game.
+  if (
+    currentVelocity.x == 0 &&
+    isFacingRight(playerSnakeHead, playerSnakeTail) &&
+    newVelocity.x == snakeVelocities.left.x &&
+    newVelocity.y == snakeVelocities.left.y
+  ) {
+    return;
+  }
+
+  globalState[game].players[socket.number - 1].velocity = newVelocity;
 };
 
 export const handleNewGame = (io, socket, mode, globalState, games) => {
@@ -76,7 +85,7 @@ export const handleNewGame = (io, socket, mode, globalState, games) => {
     socket.emit(SocketEvents.gameCode, { message: 'Game code is ', gameCode: gameId });
     return;
   }
-
+  
   createGameInterval(io, socket, globalState, gameId);
 };
 
