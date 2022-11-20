@@ -12,9 +12,18 @@ export const handleKeydown = (socket, key, globalState, games) => {
     return;
   }
 
+  const currentVelocity = globalState[game].players[socket.number - 1].velocity;
   const newVelocity = keyMappings[key];
 
   if (newVelocity) {
+    if (currentVelocity.x != 0 && currentVelocity.x * -1 == newVelocity.x) {
+      return;
+    } 
+
+    if (currentVelocity.y != 0 && currentVelocity.y * -1 == newVelocity.y) {
+      return;
+    }
+
     globalState[game].players[socket.number - 1].velocity = newVelocity;
   }
 };

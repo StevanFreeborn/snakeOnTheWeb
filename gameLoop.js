@@ -39,11 +39,11 @@ export const gameLoop = state => {
 
   players.forEach(player => updatePlayerPosition(player));
 
-  players.forEach((player, index) => {
+  for (const [index, player] of players.entries()) {
     if (isOffGrid(player)) {
-      return index + 1;
+      return index == 0 ? 2 : 1;
     }
-  })
+  }
 
   players.forEach(player => {
     if (hasEatenFood(player, state.food)) {
@@ -53,14 +53,14 @@ export const gameLoop = state => {
     }
   });
 
-  players.forEach((player, index) => {
+  for (const [index, player] of players.entries()) {
     if (hasVelocity(player) && hasEatenSelf(player)) {
-      return index + 1;
+      return index == 0 ? 2 : 1;
     }
 
     if (hasVelocity(player)) {
       player.snake.push({ ...player.position });
       player.snake.shift();
     }
-  })
+  }
 };
