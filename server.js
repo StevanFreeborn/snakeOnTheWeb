@@ -10,7 +10,7 @@ import {
   handleNewGame,
   handleJoinGame,
   handleClientError,
-} from './handlers.js';
+} from './game/state/handlers.js';
 dotenv.config();
 
 const games = {};

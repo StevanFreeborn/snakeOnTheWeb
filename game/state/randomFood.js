@@ -1,4 +1,4 @@
-import { GRID_SIZE } from './shared/constants.js';
+import { GRID_SIZE } from '../../shared/constants.js';
 
 const generateRandomGridPosition = () => {
   return Math.floor(Math.random() * GRID_SIZE);

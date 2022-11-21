@@ -1,5 +1,5 @@
-import { GRID_SIZE } from './shared/constants.js';
-import { randomFood } from './randomFood.js';
+import { GRID_SIZE } from '../../shared/constants.js';
+import { randomFood } from '../state/randomFood.js';
 
 const updatePlayerPosition = player => {
   player.position.x += player.velocity.x;
