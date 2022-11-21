@@ -20,12 +20,12 @@ export const handleKeydown = (socket, key, globalState, games) => {
   const newVelocity = keyMappings[key];
 
   const isFacingRight = (head, tail) => {
-    return head.x > tail.x
-  }
+    return head.x > tail.x;
+  };
 
   const isFacingLeft = (head, tail) => {
     return head.x < tail.x;
-  }
+  };
 
   if (!newVelocity) {
     return;
@@ -73,7 +73,7 @@ export const handleKeydown = (socket, key, globalState, games) => {
 export const handleNewGame = (io, socket, mode, globalState, games) => {
   const gameId = createGameId();
   games[socket.id] = gameId;
-  
+
   const state = initializeGameState(mode);
   globalState[gameId] = state;
 
@@ -82,14 +82,23 @@ export const handleNewGame = (io, socket, mode, globalState, games) => {
   socket.emit(SocketEvents.initialize, 1);
 
   if (mode == GameModes.TwoPlayer) {
-    socket.emit(SocketEvents.gameCode, { message: 'Game code is ', gameCode: gameId });
+    socket.emit(SocketEvents.gameCode, {
+      message: 'Game code is ',
+      gameCode: gameId,
+    });
     return;
   }
-  
+
   createGameInterval(io, socket, globalState, gameId);
 };
 
-export const handleJoinGame = async (io, socket, gameId, globalState, games) => {
+export const handleJoinGame = async (
+  io,
+  socket,
+  gameId,
+  globalState,
+  games
+) => {
   const game = await io.in(gameId).fetchSockets();
 
   if (game.length === 0) {
@@ -106,7 +115,17 @@ export const handleJoinGame = async (io, socket, gameId, globalState, games) => 
   socket.join(gameId);
   socket.number = 2;
   socket.emit(SocketEvents.initialize, 2);
-  socket.emit(SocketEvents.gameCode, { message: 'You\'ve joined game ', gameCode: gameId });
+  socket.emit(SocketEvents.gameCode, {
+    message: "You've joined game ",
+    gameCode: gameId,
+  });
 
   createGameInterval(io, socket, globalState, gameId);
+};
+
+export const handleClientError = (socket, games, error) => {
+  console.error(
+    `Socket ${socket.id} in game ${games[socket.id]} encountered an error`,
+    error
+  );
 };

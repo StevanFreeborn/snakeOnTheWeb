@@ -9,4 +9,5 @@ export default class SocketEvents {
     static gameCode = 'gameCode';
     static gameNotFound = 'gameNotFound';
     static gameFull = 'gameFull';
+    static clientError = 'clientError';
 }

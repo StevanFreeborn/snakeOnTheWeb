@@ -2,6 +2,7 @@ import GameModes from '../../shared/gameModes.js';
 import SocketEvents from '../../shared/socketEvents.js';
 import ClientEventHandler from './clientEventHandler.js';
 import { BG_COLOR } from '../../shared/constants.js';
+import errorCatcher from './errorCatcher.js';
 
 const socket = io();
 const params = new URLSearchParams(window.location.search);
@@ -33,34 +34,44 @@ const initialize = () => {
   );
 
   document.addEventListener('keydown', e =>
-    ClientEventHandler.handleKeydown(e, socket, clientState)
+    errorCatcher(socket, () =>
+      ClientEventHandler.handleKeydown(e, socket, clientState)
+    )
   );
 
   clientState.isGameActive = true;
 };
 
 socket.on(SocketEvents.initialize, number =>
-  ClientEventHandler.handleInitialize(clientState, number)
+  errorCatcher(socket, () =>
+    ClientEventHandler.handleInitialize(clientState, number)
+  )
 );
 
 socket.on(SocketEvents.gameState, gameState =>
-  ClientEventHandler.handleGameState(clientState, gameState)
+  errorCatcher(socket, () =>
+    ClientEventHandler.handleGameState(clientState, gameState)
+  )
 );
 
 socket.on(SocketEvents.gameOver, data =>
-  ClientEventHandler.handleGameOver(clientState, data)
+  errorCatcher(socket, () =>
+    ClientEventHandler.handleGameOver(clientState, data)
+  )
 );
 
 socket.on(SocketEvents.gameCode, data =>
-  ClientEventHandler.handleGameCode(clientState, data)
+  errorCatcher(socket, () =>
+    ClientEventHandler.handleGameCode(clientState, data)
+  )
 );
 
 socket.on(SocketEvents.gameNotFound, () =>
-  ClientEventHandler.handleGameNotFound(clientState)
+  errorCatcher(socket, () => ClientEventHandler.handleGameNotFound(clientState))
 );
 
 socket.on(SocketEvents.gameFull, () =>
-  ClientEventHandler.handleFullGame(clientState)
+  errorCatcher(socket, () => ClientEventHandler.handleFullGame(clientState))
 );
 
 if (clientState.mode == GameModes.TwoPlayer && clientState.gameId) {
