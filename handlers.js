@@ -6,17 +6,17 @@ import GameModes from './shared/gameModes.js';
 import { createGameInterval } from './gameInterval.js';
 import snakeVelocities from './shared/snakeVelocities.js';
 
-export const handleKeydown = (socket, key, globalState, games) => {
-  const game = games[socket.id];
+export const handleKeydown = (socket, key, games, clientToGameMap) => {
+  const game = clientToGameMap[socket.id];
 
   if (!game) {
     return;
   }
 
-  const playerSnake = globalState[game].players[socket.number - 1].snake;
+  const playerSnake = games[game].players[socket.number - 1].snake;
   const playerSnakeTail = playerSnake[0];
   const playerSnakeHead = playerSnake[playerSnake.length - 1];
-  const currentVelocity = globalState[game].players[socket.number - 1].velocity;
+  const currentVelocity = games[game].players[socket.number - 1].velocity;
   const newVelocity = keyMappings[key];
 
   const isFacingRight = (head, tail) => {
@@ -67,15 +67,15 @@ export const handleKeydown = (socket, key, globalState, games) => {
     return;
   }
 
-  globalState[game].players[socket.number - 1].velocity = newVelocity;
+  games[game].players[socket.number - 1].velocity = newVelocity;
 };
 
-export const handleNewGame = (io, socket, mode, globalState, games) => {
+export const handleNewGame = (io, socket, mode, games, clientToGameMap) => {
   const gameId = createGameId();
-  games[socket.id] = gameId;
+  clientToGameMap[socket.id] = gameId;
 
   const state = initializeGameState(mode);
-  globalState[gameId] = state;
+  games[gameId] = state;
 
   socket.join(gameId);
   socket.number = 1;
@@ -89,15 +89,15 @@ export const handleNewGame = (io, socket, mode, globalState, games) => {
     return;
   }
 
-  createGameInterval(io, socket, globalState, gameId);
+  createGameInterval(io, socket, games, gameId);
 };
 
 export const handleJoinGame = async (
   io,
   socket,
   gameId,
-  globalState,
-  games
+  games,
+  clientToGameMap
 ) => {
   const game = await io.in(gameId).fetchSockets();
 
@@ -111,7 +111,7 @@ export const handleJoinGame = async (
     return;
   }
 
-  games[socket.id] = gameId;
+  clientToGameMap[socket.id] = gameId;
   socket.join(gameId);
   socket.number = 2;
   socket.emit(SocketEvents.initialize, 2);
@@ -120,12 +120,12 @@ export const handleJoinGame = async (
     gameCode: gameId,
   });
 
-  createGameInterval(io, socket, globalState, gameId);
+  createGameInterval(io, socket, games, gameId);
 };
 
-export const handleClientError = (socket, games, error) => {
+export const handleClientError = (socket, clientToGameMap, error) => {
   console.error(
-    `Socket ${socket.id} in game ${games[socket.id]} encountered an error`,
+    `Socket ${socket.id} in game ${clientToGameMap[socket.id]} encountered an error`,
     error
   );
 };

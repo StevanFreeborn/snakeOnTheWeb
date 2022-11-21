@@ -13,8 +13,8 @@ import {
 } from './handlers.js';
 dotenv.config();
 
-const globalState = {};
 const games = {};
+const clientToGameMap = {};
 
 const app = express();
 app.disable('x-powered-by');
@@ -29,18 +29,18 @@ const io = new Server(server);
 
 io.on(SocketEvents.connection, socket => {
   socket.on(SocketEvents.keyDown, key =>
-    handleKeydown(socket, key, globalState, games)
+    handleKeydown(socket, key, games, clientToGameMap)
   );
 
   socket.on(SocketEvents.newGame, mode =>
-    handleNewGame(io, socket, mode, globalState, games)
+    handleNewGame(io, socket, mode, games, clientToGameMap)
   );
 
   socket.on(SocketEvents.joinGame, gameId =>
-    handleJoinGame(io, socket, gameId, globalState, games)
+    handleJoinGame(io, socket, gameId, games, clientToGameMap)
   );
 
-  socket.on(SocketEvents.clientError, error => handleClientError(socket, games, error));
+  socket.on(SocketEvents.clientError, error => handleClientError(socket, clientToGameMap, error));
 });
 
 const listener = server.listen(process.env.PORT || 8000, () => {
