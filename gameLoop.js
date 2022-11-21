@@ -1,4 +1,4 @@
-import { GRID_SIZE } from './constants.js';
+import { GRID_SIZE } from './shared/constants.js';
 import { randomFood } from './randomFood.js';
 
 const updatePlayerPosition = player => {

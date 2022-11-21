@@ -1,4 +1,4 @@
-import { GRID_SIZE } from './constants.js';
+import { GRID_SIZE } from './shared/constants.js';
 
 const generateRandomGridPosition = () => {
   return Math.floor(Math.random() * GRID_SIZE);
@@ -15,7 +15,7 @@ export const randomFood = state => {
   for (const player of state.players) {
     for (const segment of player.snake) {
       if (segment.x === food.x && segment.y === food.y) {
-        foodIsOnASnake = true;
+        foodIsOnSnake = true;
         break;
       }
     }

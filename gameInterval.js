@@ -1,6 +1,6 @@
-import { FRAME_RATE } from './constants.js';
+import { FRAME_RATE } from './shared/constants.js';
 import { gameLoop } from './gameLoop.js';
-import SocketEvents from './public/scripts/socketEvents.js';
+import SocketEvents from './shared/socketEvents.js';
 
 export const createGameInterval = (io, socket, globalState, gameId) => {
   const intervalId = setInterval(() => {

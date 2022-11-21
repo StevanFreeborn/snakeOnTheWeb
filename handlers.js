@@ -1,10 +1,10 @@
-import keyMappings from './public/scripts/keyMappings.js';
+import keyMappings from './shared/keyMappings.js';
 import { createGameId } from './gameId.js';
-import SocketEvents from './public/scripts/socketEvents.js';
+import SocketEvents from './shared/socketEvents.js';
 import { initializeGameState } from './gameState.js';
-import GameModes from './public/scripts/gameModes.js';
+import GameModes from './shared/gameModes.js';
 import { createGameInterval } from './gameInterval.js';
-import snakeVelocities from './public/scripts/snakeVelocities.js';
+import snakeVelocities from './shared/snakeVelocities.js';
 
 export const handleKeydown = (socket, key, globalState, games) => {
   const game = games[socket.id];
