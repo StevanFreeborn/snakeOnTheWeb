@@ -1,5 +1,5 @@
-import { GRID_SIZE } from './shared/constants.js';
-import GameModes from './shared/gameModes.js';
+import { GRID_SIZE } from '../../shared/constants.js';
+import GameModes from '../../shared/gameModes.js';
 import { randomFood } from './randomFood.js';
 
 const createGameState = mode => {

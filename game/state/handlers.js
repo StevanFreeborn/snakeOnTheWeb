@@ -1,7 +1,7 @@
 import keyMappings from './shared/keyMappings.js';
-import { createGameId } from './game/utils/gameId.js';
+import { createGameId } from './gameId.js';
 import SocketEvents from './shared/socketEvents.js';
-import { initializeGameState } from './game/state/gameState.js';
+import { initializeGameState } from './gameState.js';
 import GameModes from './shared/gameModes.js';
 import { createGameInterval } from './gameInterval.js';
 import snakeVelocities from './shared/snakeVelocities.js';
