@@ -8,7 +8,7 @@ import snakeVelocities from '../../shared/snakeVelocities.js';
 
 export const handleKeydown = (socket, key, games, clientToGameMap) => {
   const game = clientToGameMap[socket.id];
-
+  
   if (!game) {
     return;
   }
@@ -20,11 +20,11 @@ export const handleKeydown = (socket, key, games, clientToGameMap) => {
   const newVelocity = keyMappings[key];
 
   const isFacingRight = (head, tail) => {
-    return head.x > tail.x;
+    return head.x > tail.x && head.y == tail.y;
   };
 
   const isFacingLeft = (head, tail) => {
-    return head.x < tail.x;
+    return head.x < tail.x && head.y == tail.y;
   };
 
   if (!newVelocity) {
@@ -64,6 +64,8 @@ export const handleKeydown = (socket, key, games, clientToGameMap) => {
     newVelocity.x == snakeVelocities.left.x &&
     newVelocity.y == snakeVelocities.left.y
   ) {
+    console.log('fourth check')
+    console.log({ currentVelocity, newVelocity, playerSnakeHead, playerSnakeTail, })
     return;
   }
 
