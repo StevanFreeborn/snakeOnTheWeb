@@ -64,8 +64,6 @@ export const handleKeydown = (socket, key, games, clientToGameMap) => {
     newVelocity.x == snakeVelocities.left.x &&
     newVelocity.y == snakeVelocities.left.y
   ) {
-    console.log('fourth check')
-    console.log({ currentVelocity, newVelocity, playerSnakeHead, playerSnakeTail, })
     return;
   }
 
