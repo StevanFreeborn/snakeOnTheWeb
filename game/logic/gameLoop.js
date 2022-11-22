@@ -9,9 +9,9 @@ const updatePlayerPosition = player => {
 const isOffGrid = player => {
   return (
     player.position.x < 0 ||
-    player.position.x > GRID_SIZE ||
+    player.position.x >= GRID_SIZE ||
     player.position.y < 0 ||
-    player.position.y > GRID_SIZE
+    player.position.y >= GRID_SIZE
   );
 };
 

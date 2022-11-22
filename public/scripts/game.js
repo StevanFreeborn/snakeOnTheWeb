@@ -2,7 +2,7 @@ import GameModes from '../../shared/gameModes.js';
 import SocketEvents from '../../shared/socketEvents.js';
 import ClientEventHandler from './clientEventHandler.js';
 import { BG_COLOR } from '../../shared/constants.js';
-import errorCatcher from './errorCatcher.js';
+import ClientEventErrorHandler from './clientEventErrorHandler.js';
 
 const socket = io();
 const params = new URLSearchParams(window.location.search);
@@ -34,7 +34,7 @@ const initialize = () => {
   );
 
   document.addEventListener('keydown', e =>
-    errorCatcher(socket, () =>
+    ClientEventErrorHandler.handle(socket, () =>
       ClientEventHandler.handleKeydown(e, socket, clientState)
     )
   );
@@ -43,35 +43,45 @@ const initialize = () => {
 };
 
 socket.on(SocketEvents.initialize, number =>
-  errorCatcher(socket, () =>
+  ClientEventErrorHandler.handle(socket, () =>
     ClientEventHandler.handleInitialize(clientState, number)
   )
 );
 
 socket.on(SocketEvents.gameState, gameState =>
-  errorCatcher(socket, () =>
+  ClientEventErrorHandler.handle(socket, () =>
     ClientEventHandler.handleGameState(clientState, gameState)
   )
 );
 
-socket.on(SocketEvents.gameOver, data =>
-  errorCatcher(socket, () =>
-    ClientEventHandler.handleGameOver(clientState, data)
+socket.on(SocketEvents.gameOver, winner =>
+  ClientEventErrorHandler.handle(socket, () =>
+    ClientEventHandler.handleGameOver(clientState, winner)
   )
 );
 
 socket.on(SocketEvents.gameCode, data =>
-  errorCatcher(socket, () =>
+  ClientEventErrorHandler.handle(socket, () =>
     ClientEventHandler.handleGameCode(clientState, data)
   )
 );
 
 socket.on(SocketEvents.gameNotFound, () =>
-  errorCatcher(socket, () => ClientEventHandler.handleGameNotFound(clientState))
+  ClientEventErrorHandler.handle(socket, () =>
+    ClientEventHandler.handleGameNotFound(clientState)
+  )
 );
 
 socket.on(SocketEvents.gameFull, () =>
-  errorCatcher(socket, () => ClientEventHandler.handleFullGame(clientState))
+  ClientEventErrorHandler.handle(socket, () =>
+    ClientEventHandler.handleFullGame(clientState)
+  )
+);
+
+socket.on(SocketEvents.playerQuit, quitter =>
+  ClientEventErrorHandler.handle(socket, () =>
+    ClientEventHandler.handlePlayerQuit(clientState, quitter)
+  )
 );
 
 if (clientState.mode == GameModes.TwoPlayer && clientState.gameId) {

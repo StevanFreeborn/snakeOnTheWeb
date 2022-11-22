@@ -7,7 +7,7 @@ import GameModes from '../../shared/gameModes.js';
 export default class ClientEventHandler {
   static handleKeydown = (e, socket, clientState) => {
     const mappedKeys = Object.keys(keyMappings);
-    
+
     if (mappedKeys.find(key => key == e.key)) {
       e.preventDefault();
     }
@@ -43,14 +43,14 @@ export default class ClientEventHandler {
     );
   };
 
-  static handleGameOver = (clientState, data) => {
+  static handleGameOver = (clientState, winner) => {
     if (clientState.isGameActive == false) {
       return;
     }
 
     clientState.canvas.classList.toggle('border-info');
 
-    if (data.winner === clientState.playerNumber) {
+    if (winner === clientState.playerNumber) {
       clientState.gameStatus.innerHTML =
         '<span class="text-success fw-bold fst-italic">You won!</span> <a class="link-secondary" href="/">Play again?</a>';
       clientState.canvas.classList.toggle('border-success');
@@ -77,5 +77,16 @@ export default class ClientEventHandler {
   static handleFullGame = clientState => {
     clientState.gameStatus.innerHTML =
       'Sorry this game is already full. Go back to the <a href="/" class="link-success">main menu</a>.';
+  };
+
+  static handlePlayerQuit = (clientState, quitter) => {
+    if (clientState.isGameActive == false) {
+      return;
+    }
+
+    clientState.canvas.classList.toggle('border-info');
+    clientState.gameStatus.innerHTML = `<span class="text-success fw-bold fst-italic">Player ${quitter} quit. You won!</span> <a class="link-secondary" href="/">Play again?</a>`;
+    clientState.canvas.classList.toggle('border-success');
+    clientState.isGameActive = false;
   };
 }

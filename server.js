@@ -5,12 +5,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import views from './routes/views.js';
 import SocketEvents from './shared/socketEvents.js';
-import {
-  handleKeydown,
-  handleNewGame,
-  handleJoinGame,
-  handleClientError,
-} from './game/state/handlers.js';
+import ServerEventHandler from './game/state/serverEventHandler.js';
 dotenv.config();
 
 const games = {};
@@ -29,18 +24,24 @@ const io = new Server(server);
 
 io.on(SocketEvents.connection, socket => {
   socket.on(SocketEvents.keyDown, key =>
-    handleKeydown(socket, key, games, clientToGameMap)
+    ServerEventHandler.handleKeydown(socket, key, games, clientToGameMap)
   );
 
   socket.on(SocketEvents.newGame, mode =>
-    handleNewGame(io, socket, mode, games, clientToGameMap)
+    ServerEventHandler.handleNewGame(io, socket, mode, games, clientToGameMap)
   );
 
   socket.on(SocketEvents.joinGame, gameId =>
-    handleJoinGame(io, socket, gameId, games, clientToGameMap)
+    ServerEventHandler.handleJoinGame(io, socket, gameId, games, clientToGameMap)
   );
 
-  socket.on(SocketEvents.clientError, error => handleClientError(socket, clientToGameMap, error));
+  socket.on(SocketEvents.clientError, error =>
+    ServerEventHandler.handleClientError(socket, clientToGameMap, error)
+  );
+
+  socket.on(SocketEvents.disconnect, () =>
+  ServerEventHandler.handleDisconnect(io, socket, games, clientToGameMap)
+  );
 });
 
 const listener = server.listen(process.env.PORT || 8000, () => {

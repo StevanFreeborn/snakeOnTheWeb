@@ -10,4 +10,6 @@ export default class SocketEvents {
     static gameNotFound = 'gameNotFound';
     static gameFull = 'gameFull';
     static clientError = 'clientError';
+    static playerQuit = 'playerQuit';
+    static disconnect = 'disconnect';
 }
