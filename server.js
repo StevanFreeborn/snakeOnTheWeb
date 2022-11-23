@@ -5,7 +5,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import views from './routes/views.js';
 import SocketEvents from './shared/socketEvents.js';
-import ServerEventHandler from './game/state/serverEventHandler.js';
+import ServerEventHandler from './game/serverEventHandler.js';
 dotenv.config();
 
 const games = {};
