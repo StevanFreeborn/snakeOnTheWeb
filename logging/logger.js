@@ -1,6 +1,10 @@
 import winston from 'winston';
 import dotevn from 'dotenv';
 import consoleTransport from './transports/consoleTransport.js';
+import exceptionFileTransport from './transports/exceptionFileTransport.js';
+import combinedfileTransport from './transports/combinedFileTransport.js';
+import errorFileTransport from './transports/errorFileTransport.js';
+import testFileTransport from './transports/testFileTransport.js';
 dotevn.config();
 
 const createLogger = () => {
@@ -13,15 +17,16 @@ const createLogger = () => {
       winston.format.timestamp(),
       winston.format.json()
     ),
-    exceptionHandlers: [],
+    exceptionHandlers: [consoleTransport(), exceptionFileTransport()],
   });
 
   switch (process.env.NODE_ENV) {
     case 'production':
-      logger.add();
+      logger.add(combinedfileTransport());
+      logger.add(errorFileTransport());
       break;
     case 'test':
-      logger.add();
+      logger.add(testFileTransport());
       break;
     case 'developement':
     default:

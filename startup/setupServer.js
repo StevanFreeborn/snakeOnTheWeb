@@ -4,6 +4,7 @@ import SocketEvents from '../shared/socketEvents.js';
 import ServerEventHandler from '../game/serverEventHandler.js';
 import clientToGameMap from '../state/clientToGameMap.js';
 import games from '../state/games.js';
+import ErrorHandler from '../errors/errorHandler.js';
 
 export default function setupServer(app) {
   const server = createServer(app);
@@ -11,29 +12,45 @@ export default function setupServer(app) {
 
   io.on(SocketEvents.connection, socket => {
     socket.on(SocketEvents.keyDown, key =>
-      ServerEventHandler.handleKeydown(socket, key, games, clientToGameMap)
+      ErrorHandler.handleSocketError(socket, () =>
+        ServerEventHandler.handleKeydown(socket, key, games, clientToGameMap)
+      )
     );
 
     socket.on(SocketEvents.newGame, mode =>
-      ServerEventHandler.handleNewGame(io, socket, mode, games, clientToGameMap)
+      ErrorHandler.handleSocketError(socket, () =>
+        ServerEventHandler.handleNewGame(
+          io,
+          socket,
+          mode,
+          games,
+          clientToGameMap
+        )
+      )
     );
 
     socket.on(SocketEvents.joinGame, gameId =>
-      ServerEventHandler.handleJoinGame(
-        io,
-        socket,
-        gameId,
-        games,
-        clientToGameMap
+      ErrorHandler.handleSocketError(socket, () =>
+        ServerEventHandler.handleJoinGame(
+          io,
+          socket,
+          gameId,
+          games,
+          clientToGameMap
+        )
       )
     );
 
     socket.on(SocketEvents.clientError, error =>
-      ServerEventHandler.handleClientError(socket, clientToGameMap, error)
+      ErrorHandler.handleSocketError(socket, () =>
+        ServerEventHandler.handleClientError(socket, clientToGameMap, error)
+      )
     );
 
     socket.on(SocketEvents.disconnect, () =>
-      ServerEventHandler.handleDisconnect(io, socket, games, clientToGameMap)
+      ErrorHandler.handleSocketError(socket, () =>
+        ServerEventHandler.handleDisconnect(io, socket, games, clientToGameMap)
+      )
     );
   });
 

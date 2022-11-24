@@ -12,4 +12,5 @@ export default class SocketEvents {
     static clientError = 'clientError';
     static playerQuit = 'playerQuit';
     static disconnect = 'disconnect';
+    static serverError = 'serverError';
 }
