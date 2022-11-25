@@ -11,5 +11,3 @@ const port = process.env.PORT || 8000
 server.listen(port, () => {
   logger.info(`Server listening on port ${port}`);
 });
-
-export default server;

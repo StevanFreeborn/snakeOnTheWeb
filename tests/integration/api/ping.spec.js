@@ -1,9 +1,23 @@
 import chaiHttp from 'chai-http';
 import chai, { expect } from 'chai';
-import server from '../../../server.js';
+import setupApp from '../../../startup/setupApp.js';
+import setupServer from '../../../startup/setupServer.js';
 chai.use(chaiHttp);
 
 describe('ping route', function () {
+  let server;
+
+  before(function (done) {
+    const app = setupApp();
+    server = setupServer(app);
+    server = server.listen(process.env.PORT || 8000, done);
+  });
+
+  after(function(done) {
+    server.close();
+    done();
+  })
+
   it("should return i'm alive message", function (done) {
     chai
       .request(server)
