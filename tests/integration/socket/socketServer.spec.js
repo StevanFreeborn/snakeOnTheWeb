@@ -8,7 +8,8 @@ import setupServer from '../../../startup/setupServer.js';
 
 describe('socket server', function () {
   let server;
-  let clientSocket;
+  let playerOneSocket;
+  let playerTwoSocket;
 
   before(function (done) {
     const app = setupApp();
@@ -22,28 +23,54 @@ describe('socket server', function () {
   });
 
   beforeEach(function (done) {
-    clientSocket = new Client(`http://localhost:${server.address().port}`);
-    clientSocket.on('connect', done);
+    playerOneSocket = new Client(`http://localhost:${server.address().port}`);
+    playerOneSocket.on('connect', () => {
+      playerTwoSocket = new Client(`http://localhost:${server.address().port}`);
+      playerTwoSocket.on('connect', done);
+    });
   });
 
   afterEach(function () {
-    clientSocket.close();
+    playerOneSocket.close();
+    playerTwoSocket.close();
   });
 
   it('should emit initialize event with player number back to client when client emits new game with mode set to one player', function (done) {
-    clientSocket.emit(SocketEvents.newGame, 'one');
+    playerOneSocket.emit(SocketEvents.newGame, 'one');
 
-    clientSocket.on(SocketEvents.initialize, playerNumber => {
+    playerOneSocket.on(SocketEvents.initialize, playerNumber => {
       expect(playerNumber).to.be.a('number');
       expect(playerNumber).to.be.equal(1);
       done();
     });
   });
 
-  it('should emit game state event with game state back to client when client emits new game with mode set to one player', function (done) {
-    clientSocket.emit(SocketEvents.newGame, 'one');
+  it('should emit initialize event with player number back to client when client emits new game with mode set to two player', function (done) {
+    playerOneSocket.emit(SocketEvents.newGame, 'two');
 
-    clientSocket.on(SocketEvents.gameState, game => {
+    playerOneSocket.on(SocketEvents.initialize, playerNumber => {
+      expect(playerNumber).to.be.a('number');
+      expect(playerNumber).to.be.equal(1);
+      done();
+    });
+  });
+
+  it('should emit game code event with game code back to client when client emits new game with mode set to two player', function (done) {
+    playerOneSocket.emit(SocketEvents.newGame, 'two');
+
+    playerOneSocket.on(SocketEvents.gameCode, data => {
+      expect(data).to.be.an('object');
+      expect(data).to.have.property('message', 'Game code is ')
+      expect(data).to.have.property('gameCode');
+      expect(data.gameCode).to.be.a('string');
+      done();
+    });
+  });
+
+  it('should emit game state event with game state back to client when client emits new game with mode set to one player', function (done) {
+    playerOneSocket.emit(SocketEvents.newGame, 'one');
+
+    playerOneSocket.on(SocketEvents.gameState, game => {
       expect(game).to.be.an('object');
 
       expect(game).to.have.property('id');
@@ -92,10 +119,10 @@ describe('socket server', function () {
   });
 
   it('should emit game state with updated player velocity back to client when client emits keydown event', function (done) {
-    clientSocket.emit(SocketEvents.newGame, 'one');
-    clientSocket.emit(SocketEvents.keyDown, 'ArrowRight');
+    playerOneSocket.emit(SocketEvents.newGame, 'one');
+    playerOneSocket.emit(SocketEvents.keyDown, 'ArrowRight');
 
-    clientSocket.on(SocketEvents.gameState, game => {
+    playerOneSocket.on(SocketEvents.gameState, game => {
       expect(game).to.be.an('object');
 
       expect(game).to.have.property('id');
@@ -138,6 +165,17 @@ describe('socket server', function () {
       expect(game).to.have.property('interval');
       expect(game.interval).to.be.an('object');
 
+      done();
+    });
+  });
+
+  it('should emit the winner of the game back to client when a one player game ends', function (done) {
+    playerOneSocket.emit(SocketEvents.newGame, 'one');
+    playerOneSocket.emit(SocketEvents.keyDown, 'ArrowRight');
+    
+    playerOneSocket.on(SocketEvents.gameOver, winner => {
+      expect(winner).to.be.a('number');
+      expect(winner).to.be.equal(2);
       done();
     });
   });
