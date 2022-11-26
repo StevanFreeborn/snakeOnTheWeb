@@ -97,7 +97,7 @@ export default class ServerEventHandler {
       socket.emit(SocketEvents.gameFull);
       return;
     }
-  
+
     clientToGameMap[socket.id] = gameId;
     socket.join(gameId);
     socket.number = 2;
@@ -105,7 +105,7 @@ export default class ServerEventHandler {
     socket.emit(SocketEvents.initialize, 2);
   
     socket.emit(SocketEvents.gameCode, {
-      message: "You've joined game ",
+      message: 'You\'ve joined game ',
       gameCode: gameId,
     });
   
