@@ -1,7 +1,7 @@
 import { GRID_SIZE } from '../shared/constants.js';
 
 export default class Player {
-  constructor(position, snake) {
+  constructor(position) {
     this.position = {
       x: position.x,
       y: position.y,
@@ -48,7 +48,7 @@ export default class Player {
   };
 
   hasVelocity = () => {
-    return this.velocity.x || this.velocity.y;
+    return this.velocity.x != 0 || this.velocity.y != 0;
   };
 
   hasEatenSelf = () => {
