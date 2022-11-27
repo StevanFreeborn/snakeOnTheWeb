@@ -3,6 +3,10 @@ import { GRID_SIZE } from '../shared/constants.js';
 
 export default class Game {
   constructor(players) {
+    if (!players) {
+      throw new Error('players is undefined');
+    }
+
     this.id = nanoid(10);
     this.players = players;
     this.food = this.getRandomFoodPosition();

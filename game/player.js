@@ -2,6 +2,10 @@ import { GRID_SIZE } from '../shared/constants.js';
 
 export default class Player {
   constructor(position) {
+    if(!position) {
+      throw new Error('position is undefined');
+    }
+
     this.position = {
       x: position.x,
       y: position.y,

@@ -1,6 +1,9 @@
 import { expect } from 'chai';
 import Player from '../../game/player.js';
-import { DEFAULT_PLAYER_ONE_POSITION, GRID_SIZE } from '../../shared/constants.js';
+import {
+  DEFAULT_PLAYER_ONE_POSITION,
+  GRID_SIZE,
+} from '../../shared/constants.js';
 
 describe('player', function () {
   it('should be able to construct a new player instance with given position', function () {
@@ -34,14 +37,18 @@ describe('player', function () {
     });
   });
 
+  it("should throw an error if no position is provided to it's constructor", function () {
+    expect(() => new Player()).to.throw('position is undefined');
+  });
+
   it("should be able to update it's position by it's velocity", function () {
     const player = new Player(DEFAULT_PLAYER_ONE_POSITION);
     const playerOriginalPos = Object.assign({}, player.position);
 
     player.velocity = {
-        x: 1,
-        y: 0,
-    }
+      x: 1,
+      y: 0,
+    };
 
     player.updatePosition();
 
@@ -109,7 +116,7 @@ describe('player', function () {
       { x: 5, y: 8 },
       { x: 4, y: 8 },
       { x: 4, y: 9 },
-      { x: 4, y: 10},
+      { x: 4, y: 10 },
     ];
 
     expect(player.hasEatenSelf()).to.be.equal(true);
