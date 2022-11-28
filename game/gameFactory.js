@@ -26,13 +26,17 @@ export default class GameFactory {
     return game;
   }
 
-  static createGameInterval = (io, clientToGameMap, games, gameId) => {
+  static createGameLoop = (io, clientToGameMap, games, gameId) => {
     const intervalId = setInterval(async () => {
       const game = games[gameId];
       game.interval = intervalId;
+
+      game.updatePlayerPositions();
       const winner = game.getWinner();
   
       if (!winner) {
+        game.checkIfAPlayerHasEatenFood();
+        game.updatePlayersSnake();
         io.sockets.in(game.id).emit(SocketEvents.gameState, game);
         return;
       }

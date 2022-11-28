@@ -76,7 +76,7 @@ export default class ServerEventHandler {
       return;
     }
     
-    GameFactory.createGameInterval(io, clientToGameMap, games, game.id);
+    GameFactory.createGameLoop(io, clientToGameMap, games, game.id);
   };
   
   static handleJoinGame = async (
@@ -109,7 +109,7 @@ export default class ServerEventHandler {
       gameCode: gameId,
     });
   
-    GameFactory.createGameInterval(io, clientToGameMap, games, gameId);
+    GameFactory.createGameLoop(io, clientToGameMap, games, gameId);
   };
   
   static handleClientError = (socket, clientToGameMap, error) => {

@@ -42,34 +42,95 @@ export default class Game {
     return food;
   };
 
-  getWinner = () => {
-    const players = this.players;
+  updatePlayerPositions = () => {
+    this.players.forEach(player => player.updatePosition());
+  };
 
-    players.forEach(player => player.updatePosition());
-
-    for (const [index, player] of players.entries()) {
+  checkIfAPlayerIsOffGrid = () => {
+    for (const [index, player] of this.players.entries()) {
       if (player.isOffGrid()) {
-        return index == 0 ? 2 : 1;
+        const winner = index == 0 ? 2 : 1;
+        return { status: true, winner };
       }
     }
 
-    players.forEach(player => {
+    return { status: false };
+  };
+
+  checkIfAPlayerHasEatenSelf = () => {
+    for (const [index, player] of this.players.entries()) {
+      if (player.hasVelocity() && player.hasEatenSelf()) {
+        const winner = index == 0 ? 2 : 1;
+        return { status: true, winner };
+      }
+    }
+
+    return { status: false };
+  };
+
+  checkIfAPlayerHasEatenFood = () => {
+    this.players.forEach(player => {
       if (player.hasEatenFood(this.food)) {
         player.lengthenSnake();
         player.updatePosition();
         this.food = this.getRandomFoodPosition();
       }
     });
+  };
 
-    for (const [index, player] of players.entries()) {
-      if (player.hasVelocity() && player.hasEatenSelf()) {
-        return index == 0 ? 2 : 1;
-      }
-
+  updatePlayersSnake = () => {
+    this.players.forEach(player => {
       if (player.hasVelocity()) {
         player.lengthenSnake();
         player.shortenSnake();
       }
+    });
+  };
+
+  getWinner = () => {
+    const isOffGridResult = this.checkIfAPlayerIsOffGrid();
+
+    if (isOffGridResult.status == true) {
+      return isOffGridResult.winner;
     }
+
+    const hasEatenSelfResult = this.checkIfAPlayerHasEatenSelf();
+
+    if (hasEatenSelfResult.status == true) {
+      return hasEatenSelfResult.winner;
+    }
+
+    return 0;
   };
 }
+
+// getWinner = () => {
+//   const players = this.players;
+
+//   players.forEach(player => player.updatePosition());
+
+//   for (const [index, player] of players.entries()) {
+//     if (player.isOffGrid()) {
+//       return index == 0 ? 2 : 1;
+//     }
+//   }
+
+//   players.forEach(player => {
+//     if (player.hasEatenFood(this.food)) {
+//       player.lengthenSnake();
+//       player.updatePosition();
+//       this.food = this.getRandomFoodPosition();
+//     }
+//   });
+
+//   for (const [index, player] of players.entries()) {
+//     if (player.hasVelocity() && player.hasEatenSelf()) {
+//       return index == 0 ? 2 : 1;
+//     }
+
+//     if (player.hasVelocity()) {
+//       player.lengthenSnake();
+//       player.shortenSnake();
+//     }
+//   }
+// };
