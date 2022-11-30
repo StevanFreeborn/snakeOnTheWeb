@@ -33,6 +33,8 @@ const initialize = () => {
     clientState.canvas.height
   );
 
+  document.getElementById('game-screen').classList.remove('visually-hidden');
+
   document.addEventListener('keydown', e =>
     ClientEventErrorHandler.handle(socket, () =>
       ClientEventHandler.handleKeydown(e, socket, clientState)
