@@ -2,6 +2,8 @@ import morgan from 'morgan';
 import logger from '../logging/logger.js';
 
 export default function loggingMiddleware(app) {
+  logger.info('adding logging middleware');
+
   morgan.token('reqId', (req, res) => req.id);
   morgan.token('reqId', (req, res) => req.id);
   morgan.token('requestHeaders', (req, res) => req.headers);

@@ -5,12 +5,17 @@ import ServerEventHandler from '../game/serverEventHandler.js';
 import clientToGameMap from '../state/clientToGameMap.js';
 import games from '../state/games.js';
 import ErrorHandler from '../errors/errorHandler.js';
+import logger from '../logging/logger.js';
 
 export default function setupServer(app) {
+  logger.info('setting up server');
+
   const server = createServer(app);
   const io = new Server(server);
 
   io.on(SocketEvents.connection, socket => {
+    logger.info(`Player ${socket.id} has connected`);
+
     socket.on(SocketEvents.keyDown, key =>
       ErrorHandler.handleSocketError(socket, () =>
         ServerEventHandler.handleKeydown(socket, key, games, clientToGameMap)

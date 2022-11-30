@@ -38,5 +38,6 @@ const createLogger = () => {
 };
 
 const logger = createLogger();
+logger.on('error', err => logger.error('The logger encountered an error', err));
 
 export default logger;

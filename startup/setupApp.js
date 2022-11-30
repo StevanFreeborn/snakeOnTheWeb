@@ -3,8 +3,11 @@ import cors from 'cors';
 import addRoutes from './addRoutes.js';
 import loggingMiddleware from '../middleware/loggingMiddleware.js';
 import requestIdMiddleware from '../middleware/requestIdMiddleware.js';
+import logger from '../logging/logger.js';
 
 export default function setupApp() {
+  logger.info('setting up express app');
+  
   const app = express();
 
   app.disable('x-powered-by');
