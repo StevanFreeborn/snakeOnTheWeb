@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev-windows": "set NODE_ENV=development&& nodemon server.js",
-    "test-windows": "set NODE_ENV=test&& mocha --timeout 30000 ./tests/**/*.spec.js --exit"
+    "test-windows": "set NODE_ENV=test&& c8 mocha --timeout 30000 ./tests/**/*.spec.js --exit"
   },
   "keywords": [
     "snake"
@@ -14,6 +14,7 @@
   "author": "stevan freeborn",
   "license": "MIT",
   "dependencies": {
+    "c8": "^7.12.0",
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",
