@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "test": "NODE_ENV=test c8 mocha --timeout 30000 ./tests/**/*.spec.js --exit",
     "dev-windows": "set NODE_ENV=development&& nodemon server.js",
     "test-windows": "set NODE_ENV=test&& c8 mocha --timeout 30000 ./tests/**/*.spec.js --exit"
   },
