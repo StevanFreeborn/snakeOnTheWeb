@@ -103,34 +103,3 @@ export default class Game {
     return 0;
   };
 }
-
-// getWinner = () => {
-//   const players = this.players;
-
-//   players.forEach(player => player.updatePosition());
-
-//   for (const [index, player] of players.entries()) {
-//     if (player.isOffGrid()) {
-//       return index == 0 ? 2 : 1;
-//     }
-//   }
-
-//   players.forEach(player => {
-//     if (player.hasEatenFood(this.food)) {
-//       player.lengthenSnake();
-//       player.updatePosition();
-//       this.food = this.getRandomFoodPosition();
-//     }
-//   });
-
-//   for (const [index, player] of players.entries()) {
-//     if (player.hasVelocity() && player.hasEatenSelf()) {
-//       return index == 0 ? 2 : 1;
-//     }
-
-//     if (player.hasVelocity()) {
-//       player.lengthenSnake();
-//       player.shortenSnake();
-//     }
-//   }
-// };
