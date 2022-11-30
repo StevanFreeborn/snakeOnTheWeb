@@ -39,7 +39,7 @@ export default class ClientEventHandler {
     }
 
     requestAnimationFrame(() =>
-      Drawer.drawGame(clientState.context, gameState)
+      Drawer.drawGame(clientState, gameState)
     );
   };
 
