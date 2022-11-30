@@ -1,4 +1,4 @@
-export const FRAME_RATE = 8;
+export const FRAME_RATE = 10;
 export const GRID_SIZE = 40;
 export const BG_COLOR = '#231f20';
 export const SNAKE_COLOR_1 = '#974fe0';
